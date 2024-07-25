@@ -1,4 +1,6 @@
 package com.example.ShortnerURL.Controller;
+import com.example.ShortnerURL.WebDto.ErrorResponseDto;
+import com.example.ShortnerURL.WebDto.SuccessResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +17,18 @@ public class PingController {
     private JdbcTemplate jdbcTemplate;
 
     @GetMapping("/ping")
-    public ResponseEntity<Map<String, String>> ping() {
+    public ResponseEntity<Object> ping() {
         try {
             jdbcTemplate.queryForObject("SELECT current_timestamp;", String.class);
-            Map<String, String> response = new HashMap<>();
-            response.put("status", "ok");
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            SuccessResponseDto successResponseDto = SuccessResponseDto.builder()
+                    .status("status: ok")
+                    .build();
+            return new ResponseEntity<>(successResponseDto, HttpStatus.OK);
         } catch (Exception e) {
-            Map<String, String> response = new HashMap<>();
-            response.put("status", "error");
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            ErrorResponseDto errorResponseDto = ErrorResponseDto.builder()
+                    .status("status: error")
+                    .build();
+            return new ResponseEntity<>(errorResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
