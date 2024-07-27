@@ -21,12 +21,12 @@ public class PingController {
         try {
             jdbcTemplate.queryForObject("SELECT current_timestamp;", String.class);
             SuccessResponseDto successResponseDto = SuccessResponseDto.builder()
-                    .status("status: ok")
+                    .status("ok")
                     .build();
             return new ResponseEntity<>(successResponseDto, HttpStatus.OK);
         } catch (Exception e) {
             ErrorResponseDto errorResponseDto = ErrorResponseDto.builder()
-                    .status("status: error")
+                    .status("error")
                     .build();
             return new ResponseEntity<>(errorResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
