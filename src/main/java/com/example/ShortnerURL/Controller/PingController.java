@@ -1,6 +1,6 @@
 package com.example.ShortnerURL.Controller;
 import com.example.ShortnerURL.Exceptions.ApplicationExceptions;
-import com.example.ShortnerURL.WebDto.SuccessResponseDto;
+import com.example.ShortnerURL.WebDto.PingResponseDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +18,14 @@ public class PingController {
     private JdbcTemplate jdbcTemplate;
 
     @GetMapping("/ping")
-    public SuccessResponseDto ping() {
+    public PingResponseDTO ping() {
         try {
             jdbcTemplate.queryForObject("SELECT current_timestamp;", String.class);
-            return SuccessResponseDto.builder()
+            return PingResponseDTO.builder()
                     .status("ok")
                     .build();
         } catch (Exception e) {
-            logger.error("Error");
+            logger.error("Error", e);
             throw new ApplicationExceptions("error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

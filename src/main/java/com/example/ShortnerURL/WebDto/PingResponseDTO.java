@@ -7,6 +7,6 @@ import lombok.Value;
 @Value
 @Getter
 @Builder
-public class SuccessResponseDto {
+public class PingResponseDTO {
     String status;
 }
