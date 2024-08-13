@@ -1,9 +1,8 @@
 package com.example.ShortnerURL.controller;
 
 import com.example.ShortnerURL.exceptions.ApplicationExceptions;
+import com.example.ShortnerURL.models.dto.CreateShortLinkRequestDto;
 import com.example.ShortnerURL.models.dto.ShortLinkDto;
-import com.example.ShortnerURL.models.entity.ShortLinkEntity;
-import com.example.ShortnerURL.exceptions.InvalidUrlException;
 import com.example.ShortnerURL.service.ApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,22 +21,23 @@ public class ApiController {
     private final ApiService apiService;
 
     @PostMapping
-    public ShortLinkDto createShortLink(@RequestBody String longLink) throws ApplicationExceptions {
-        return apiService.createShortLink(longLink);
+    @ResponseStatus(HttpStatus.CREATED)
+    public ShortLinkDto createShortLink(@RequestBody CreateShortLinkRequestDto createShortLinkRequestDto) throws ApplicationExceptions {
+        return apiService.createShortLink(createShortLinkRequestDto.getLongLink());
     }
 
     @GetMapping()
-    public ResponseEntity<List<ShortLinkEntity>> getShortLinksAvailable() {
+    public ResponseEntity<List<ShortLinkDto>> getShortLinksAvailable() {
         return ResponseEntity.ok(apiService.getAllShortLinks());
     }
 
     @GetMapping("/{shortLinkCode}")
-    public ResponseEntity<ShortLinkEntity> getShortLink(@RequestParam Long id) {
-        return ResponseEntity.ok(apiService.getShortLink(id));
+    public ResponseEntity<ShortLinkDto> getShortLink(@PathVariable String shortLinkCode) {
+        return ResponseEntity.ok(apiService.getShortLink(shortLinkCode));
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteShortLink(@PathVariable Long id){
-        apiService.deleteShortLink(id);
+    @DeleteMapping("/{shortLinkCode}")
+    public ResponseEntity<String> deleteShortLink(@PathVariable String shortLinkCode){
+        apiService.deleteShortLink(shortLinkCode);
         return ResponseEntity.ok("Link deleted");
     }
 }

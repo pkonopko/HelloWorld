@@ -16,6 +16,7 @@ public class GlobalExceptionHandler {
     public final ResponseEntity<ErrorResponseDto> handleApplicationException(ApplicationExceptions ex){
         ErrorResponseDto errorResponse = ErrorResponseDto.builder()
                 .status("error")
+                .message(ex.getMessage())
                 .build();
         logger.error("Application exception: ", ex);
         return ResponseEntity.status(ex.getHttpStatus()).body(errorResponse);

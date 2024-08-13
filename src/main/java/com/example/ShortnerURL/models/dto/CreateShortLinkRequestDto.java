@@ -7,8 +7,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShortLinkDto {
-    String shortLinkCode;
-    String shortLink;
+public class CreateShortLinkRequestDto {
     String longLink;
 }

@@ -12,6 +12,7 @@ public class ShortLinkEntityToShortLinkDto implements Converter<ShortLinkEntity,
         return ShortLinkDto.builder()
                 .shortLink(shortLinkEntity.getShortLinkCode())
                 .shortLinkCode(shortLinkEntity.getShortLinkCode())
+                .longLink(shortLinkEntity.getLongLink())
                 .build();
     }
 }

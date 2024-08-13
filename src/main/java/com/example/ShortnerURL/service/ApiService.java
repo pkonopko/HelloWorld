@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 
 
@@ -23,47 +24,58 @@ public class ApiService {
     private final ModelMapper modelMapper;
     private static final String DOMAIN = "example.com/";
 
-    public List<ShortLinkEntity> getAllShortLinks() {
-
-        return shortLinkRepository.findAll();
+    public List<ShortLinkDto> getAllShortLinks() {
+        return shortLinkRepository.findAll()
+                .stream()
+                .map(ApiService::convertToDto)
+                .toList();
     }
-
-    public void deleteShortLink(Long id) throws ShortLinkNotFoundException {
-        if(!shortLinkRepository.existsById(id)){
-            throw new ShortLinkNotFoundException(id);
+    private static ShortLinkDto convertToDto(ShortLinkEntity shortLinkEntity){
+        return ShortLinkDto.builder()
+                .shortLinkCode(shortLinkEntity.getShortLinkCode())
+                .shortLink(DOMAIN + shortLinkEntity.getShortLinkCode())
+                .longLink(shortLinkEntity.getLongLink())
+                .build();
+    }
+    @Transactional
+    public void deleteShortLink(String shortLinkCode) throws ShortLinkNotFoundException {
+        if (!shortLinkRepository.existsByShortLinkCode(shortLinkCode)) {
+            throw new ShortLinkNotFoundException(shortLinkCode);
         }
-         shortLinkRepository.deleteById(id);
+        shortLinkRepository.deleteByShortLinkCode(shortLinkCode);
     }
 
-    public ShortLinkEntity getShortLink(Long id) {
-        return shortLinkRepository.findById(id)
-                .orElseThrow(() -> new ShortLinkNotFoundException(id));
+
+    public ShortLinkDto getShortLink(String shortLinkCode) {
+
+        return shortLinkRepository.findByShortLinkCode(shortLinkCode)
+                .stream()
+                .findFirst()
+                .map(ApiService::convertToDto)
+                .orElseThrow(() -> new ShortLinkNotFoundException(shortLinkCode));
     }
 
     public ShortLinkDto createShortLink(String longLink) throws ApplicationExceptions {
         String shortLinkCode = "";
-//       if (!validateURL(longLink)) {
-//            throw new InvalidUrlException();
-//           }
-            do {
-                shortLinkCode = RandomStringUtils.randomAlphanumeric(6);
-            } while (shortLinkRepository.existsByShortLinkCode(shortLinkCode));
-
-            ShortLinkEntity shortLinkEntity = ShortLinkEntity.builder()
-                    .shortLinkCode(shortLinkCode)
-                    .longLink(longLink)
-                    .build();
-            ShortLinkEntity savedEntity = shortLinkRepository.save(shortLinkEntity);
-            ShortLinkDto savedDto = modelMapper.map(savedEntity, ShortLinkDto.class);
-            savedDto.setShortLinkCode(savedEntity.getShortLinkCode());
-            savedDto.setShortLink(DOMAIN + savedDto.getShortLinkCode());
-            return savedDto;
+        if (!validateURL(longLink)) {
+            throw new InvalidUrlException(longLink);
         }
-    private static boolean validateURL(String longLink){
+        do {
+            shortLinkCode = RandomStringUtils.randomAlphanumeric(6);
+        } while (shortLinkRepository.existsByShortLinkCode(shortLinkCode));
+
+        ShortLinkEntity shortLinkEntity = ShortLinkEntity.builder()
+                .shortLinkCode(shortLinkCode)
+                .longLink(longLink)
+                .build();
+        ShortLinkEntity savedEntity = shortLinkRepository.save(shortLinkEntity);
+        return convertToDto(savedEntity);
+    }
+
+    private static boolean validateURL(String longLink) {
         try {
             new URL(longLink).toURI();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             return false;
         }
