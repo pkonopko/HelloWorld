@@ -8,14 +8,16 @@ import com.example.ShortnerURL.exceptions.InvalidUrlException;
 import com.example.ShortnerURL.repositories.ShortLinkRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.web.servlet.view.RedirectView;
 
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +25,8 @@ public class ApiService {
     private final ShortLinkRepository shortLinkRepository;
     private final ModelMapper modelMapper;
     private static final String DOMAIN = "example.com/";
+    private final Map<String, String> urlMapping;
+
 
     public List<ShortLinkDto> getAllShortLinks() {
         return shortLinkRepository.findAll()
@@ -30,13 +34,15 @@ public class ApiService {
                 .map(ApiService::convertToDto)
                 .toList();
     }
-    private static ShortLinkDto convertToDto(ShortLinkEntity shortLinkEntity){
+
+    private static ShortLinkDto convertToDto(ShortLinkEntity shortLinkEntity) {
         return ShortLinkDto.builder()
                 .shortLinkCode(shortLinkEntity.getShortLinkCode())
                 .shortLink(DOMAIN + shortLinkEntity.getShortLinkCode())
                 .longLink(shortLinkEntity.getLongLink())
                 .build();
     }
+
     @Transactional
     public void deleteShortLink(String shortLinkCode) throws ShortLinkNotFoundException {
         if (!shortLinkRepository.existsByShortLinkCode(shortLinkCode)) {
@@ -80,5 +86,14 @@ public class ApiService {
             return false;
         }
         return true;
+    }
+
+    public RedirectView redirectToOriginalUrl(String shortLinkCode) throws ShortLinkNotFoundException{
+        List<ShortLinkEntity> shortLinkEntities = shortLinkRepository.findByShortLinkCode(shortLinkCode);
+        ShortLinkEntity shortLinkEntity = shortLinkEntities
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new ShortLinkNotFoundException(shortLinkCode));
+        return new RedirectView(shortLinkEntity.getLongLink());
     }
 }
