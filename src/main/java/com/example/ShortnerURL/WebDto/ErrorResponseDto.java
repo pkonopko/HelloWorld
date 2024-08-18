@@ -1,4 +1,4 @@
-package com.example.ShortnerURL.WebDto;
+package com.example.ShortnerURL.webDto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,4 +9,5 @@ import lombok.Value;
 @Builder
 public class ErrorResponseDto {
     String status;
+    String message;
 }

@@ -1,12 +1,11 @@
-package com.example.ShortnerURL.Entity;
+package com.example.ShortnerURL.models.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Index;
-import org.springframework.validation.annotation.Validated;
 
 
-@Entity
+@Entity(name = "links")
 @Getter
 @Setter
 @Builder

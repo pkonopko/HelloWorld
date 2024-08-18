@@ -1,4 +1,4 @@
-package com.example.ShortnerURL.WebDto;
+package com.example.ShortnerURL.webDto;
 
 import lombok.Builder;
 import lombok.Getter;

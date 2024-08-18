@@ -1,6 +1,6 @@
-package com.example.ShortnerURL.Controller;
-import com.example.ShortnerURL.Exceptions.ApplicationExceptions;
-import com.example.ShortnerURL.WebDto.PingResponseDTO;
+package com.example.ShortnerURL.controller;
+import com.example.ShortnerURL.exceptions.ApplicationExceptions;
+import com.example.ShortnerURL.webDto.PingResponseDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
