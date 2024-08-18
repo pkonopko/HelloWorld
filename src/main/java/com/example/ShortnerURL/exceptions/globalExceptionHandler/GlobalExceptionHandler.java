@@ -24,7 +24,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Throwable.class)
     public final ResponseEntity<ErrorResponseDto>HandleException(Throwable ex){
         ErrorResponseDto errorResponse = ErrorResponseDto.builder()
-                .status("Unknown error")
+                .status("Error")
+                .message("Unknown error")
                 .build();
         logger.error("Unknown error: ", ex);
         return ResponseEntity.internalServerError().body(errorResponse);

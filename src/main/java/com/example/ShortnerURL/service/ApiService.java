@@ -2,12 +2,15 @@ package com.example.ShortnerURL.service;
 
 import com.example.ShortnerURL.exceptions.ApplicationExceptions;
 import com.example.ShortnerURL.exceptions.ShortLinkNotFoundException;
+import com.example.ShortnerURL.exceptions.globalExceptionHandler.GlobalExceptionHandler;
 import com.example.ShortnerURL.models.dto.ShortLinkDto;
 import com.example.ShortnerURL.models.entity.ShortLinkEntity;
 import com.example.ShortnerURL.exceptions.InvalidUrlException;
 import com.example.ShortnerURL.repositories.ShortLinkRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -23,10 +26,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ApiService {
     private final ShortLinkRepository shortLinkRepository;
-    private final ModelMapper modelMapper;
+    private static final Logger logger = LoggerFactory.getLogger(ApiService.class);
     private static final String DOMAIN = "example.com/";
-    private final Map<String, String> urlMapping;
-
+    private static final String NOT_FOUND_PAGE = "404";
 
     public List<ShortLinkDto> getAllShortLinks() {
         return shortLinkRepository.findAll()
@@ -42,7 +44,6 @@ public class ApiService {
                 .longLink(shortLinkEntity.getLongLink())
                 .build();
     }
-
     @Transactional
     public void deleteShortLink(String shortLinkCode) throws ShortLinkNotFoundException {
         if (!shortLinkRepository.existsByShortLinkCode(shortLinkCode)) {
@@ -60,7 +61,7 @@ public class ApiService {
                 .map(ApiService::convertToDto)
                 .orElseThrow(() -> new ShortLinkNotFoundException(shortLinkCode));
     }
-
+    @Transactional
     public ShortLinkDto createShortLink(String longLink) throws ApplicationExceptions {
         String shortLinkCode = "";
         if (!validateURL(longLink)) {
@@ -82,7 +83,7 @@ public class ApiService {
         try {
             new URL(longLink).toURI();
         } catch (Exception e) {
-            System.out.println(e);
+            logger.error("URL validation fail: ", e);
             return false;
         }
         return true;
@@ -90,10 +91,11 @@ public class ApiService {
 
     public RedirectView redirectToOriginalUrl(String shortLinkCode) throws ShortLinkNotFoundException{
         List<ShortLinkEntity> shortLinkEntities = shortLinkRepository.findByShortLinkCode(shortLinkCode);
-        ShortLinkEntity shortLinkEntity = shortLinkEntities
+        String longLink = shortLinkEntities
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new ShortLinkNotFoundException(shortLinkCode));
-        return new RedirectView(shortLinkEntity.getLongLink());
+                .map(ShortLinkEntity::getLongLink)
+                .orElse(NOT_FOUND_PAGE);
+        return new RedirectView(longLink);
     }
 }
