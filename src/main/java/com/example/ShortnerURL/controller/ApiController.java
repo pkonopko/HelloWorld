@@ -15,7 +15,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.List;
 
 @RestController
-//@RequestMapping("/shortLink")
 @RequiredArgsConstructor
 public class ApiController {
     private static final Logger logger = LoggerFactory.getLogger(ApiController.class);
