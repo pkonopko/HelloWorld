@@ -2,16 +2,13 @@ package com.example.ShortnerURL.service;
 
 import com.example.ShortnerURL.exceptions.ApplicationExceptions;
 import com.example.ShortnerURL.exceptions.ShortLinkNotFoundException;
-import com.example.ShortnerURL.exceptions.globalExceptionHandler.GlobalExceptionHandler;
 import com.example.ShortnerURL.models.dto.ShortLinkDto;
 import com.example.ShortnerURL.models.entity.ShortLinkEntity;
 import com.example.ShortnerURL.exceptions.InvalidUrlException;
 import com.example.ShortnerURL.repositories.ShortLinkRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,12 +17,13 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class ApiService {
+
     private final ShortLinkRepository shortLinkRepository;
+    private final RandomAlphanumericProvider randomAlphanumericProvider;
     private static final Logger logger = LoggerFactory.getLogger(ApiService.class);
     private static final String DOMAIN = "example.com/";
     private static final String NOT_FOUND_PAGE = "404";
@@ -68,7 +66,7 @@ public class ApiService {
             throw new InvalidUrlException(longLink);
         }
         do {
-            shortLinkCode = RandomStringUtils.randomAlphanumeric(6);
+            shortLinkCode = randomAlphanumericProvider.getNewShortLinkCode();
         } while (shortLinkRepository.existsByShortLinkCode(shortLinkCode));
 
         ShortLinkEntity shortLinkEntity = ShortLinkEntity.builder()
