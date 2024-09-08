@@ -33,26 +33,28 @@ public class ApiControllerIntegrationTests {
     private TestRestTemplate restTemplate;
     @Autowired
     private ShortLinkRepository shortLinkRepository;
+
     @BeforeEach
     void setUp() {
-            ShortLinkEntity shortLink1 = ShortLinkEntity.builder()
-                    .longLink("http://example.com")
-                    .shortLinkCode("abc123")
-                    .build();
+        ShortLinkEntity shortLink1 = ShortLinkEntity.builder()
+                .longLink("http://example.com")
+                .shortLinkCode("abc123")
+                .build();
         ShortLinkEntity shortLink2 = ShortLinkEntity.builder()
                 .longLink("http://example.com")
                 .shortLinkCode("xyz098")
                 .build();
-            shortLinkRepository.save(shortLink1);
-            shortLinkRepository.save(shortLink2);
-        }
+        shortLinkRepository.save(shortLink1);
+        shortLinkRepository.save(shortLink2);
+    }
+
     @AfterEach
-    void cleanUp(){
+    void cleanUp() {
         shortLinkRepository.deleteAll();
     }
 
     @Test
-    void shouldGetShortLinksAvailable(){
+    void shouldGetShortLinksAvailable() {
         String url = "http://localhost:" + port + "/shortLink";
         ResponseEntity<ShortLinkDto[]> response = restTemplate.getForEntity(url, ShortLinkDto[].class);
 
@@ -64,22 +66,24 @@ public class ApiControllerIntegrationTests {
         assertThat(shortLinks.get(0).getShortLinkCode()).isEqualTo("abc123");
         assertThat(shortLinks.get(1).getShortLinkCode()).isEqualTo("xyz098");
     }
+
     @Test
-    void shouldGetShortLink(){
+    void shouldGetShortLink() {
         String url = "http://localhost:" + port + "/shortLink/{shortLinkCode}";
 
-            ResponseEntity<ShortLinkDto> response = restTemplate.getForEntity(url, ShortLinkDto.class, "abc123");
+        ResponseEntity<ShortLinkDto> response = restTemplate.getForEntity(url, ShortLinkDto.class, "abc123");
 
-            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-            assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody()).isNotNull();
 
-            ShortLinkDto shortLinkDto = response.getBody();
-            assertThat(shortLinkDto.getShortLinkCode()).isEqualTo("abc123");
-            assertThat(shortLinkDto.getLongLink()).isEqualTo("http://example.com");
-        }
-        @Test
-    void shouldDeleteShortLink(){
+        ShortLinkDto shortLinkDto = response.getBody();
+        assertThat(shortLinkDto.getShortLinkCode()).isEqualTo("abc123");
+        assertThat(shortLinkDto.getLongLink()).isEqualTo("http://example.com");
+    }
+
+    @Test
+    void shouldDeleteShortLink() {
         String url = "http://localhost:" + port + "/shortLink/{shortLinkCode}";
 
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, null, String.class, "abc123");
@@ -88,35 +92,37 @@ public class ApiControllerIntegrationTests {
         assertThat(response.getBody()).isEqualTo("Link deleted");
 
         assertThat(shortLinkRepository.findByShortLinkCode("abc123")).isEmpty();
-        }
-        @Test
-    void shouldCreateShortLink(){
+    }
+
+    @Test
+    void shouldCreateShortLink() {
         String url = "http://localhost:" + port + "/shortLink";
 
         CreateShortLinkRequestDto requestDto = new CreateShortLinkRequestDto();
-            requestDto.setLongLink("http://example.com");
+        requestDto.setLongLink("http://example.com");
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
 
-            HttpEntity<CreateShortLinkRequestDto> requestEntity = new HttpEntity<>(requestDto,headers);
+        HttpEntity<CreateShortLinkRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
 
-            ResponseEntity<ShortLinkDto> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, ShortLinkDto.class);
+        ResponseEntity<ShortLinkDto> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, ShortLinkDto.class);
 
-            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-            ShortLinkDto responseBody = response.getBody();
-            assertThat(response.getBody()).isNotNull();
-            assertThat(responseBody.getLongLink()).isEqualTo("http://example.com");
+        ShortLinkDto responseBody = response.getBody();
+        assertThat(response.getBody()).isNotNull();
+        assertThat(responseBody.getLongLink()).isEqualTo("http://example.com");
 
-            List<ShortLinkEntity> savedEntities = shortLinkRepository.findByShortLinkCode(responseBody.getShortLinkCode());
+        List<ShortLinkEntity> savedEntities = shortLinkRepository.findByShortLinkCode(responseBody.getShortLinkCode());
 
-            assertThat(savedEntities).isNotEmpty();
-            ShortLinkEntity savedEntity = savedEntities.get(0);
-            assertThat(savedEntity.getLongLink()).isEqualTo("http://example.com");
-        }
-        @Test
-    void shouldRedirectURL(){
+        assertThat(savedEntities).isNotEmpty();
+        ShortLinkEntity savedEntity = savedEntities.get(0);
+        assertThat(savedEntity.getLongLink()).isEqualTo("http://example.com");
+    }
+
+    @Test
+    void shouldRedirectURL() {
         String shortLinkCode = "abc123";
         String url = "http://localhost:" + port + "/" + shortLinkCode;
         // Set the request config in rest template to disable redirect
@@ -126,5 +132,5 @@ public class ApiControllerIntegrationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         String expectedUrl = "http://example.com";
         assertThat(response.getHeaders().getFirst(HttpHeaders.LOCATION)).isEqualTo(expectedUrl);
-        }
     }
+}
