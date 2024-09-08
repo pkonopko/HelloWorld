@@ -11,9 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.web.client.RestTemplate;
+
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 
 import java.util.List;
 
@@ -114,7 +119,10 @@ public class ApiControllerIntegrationTests {
     void shouldRedirectURL(){
         String shortLinkCode = "abc123";
         String url = "http://localhost:" + port + "/" + shortLinkCode;
-        ResponseEntity<Void> response = restTemplate.getForEntity(url, Void.class);
+        // Set the request config in rest template to disable redirect
+        HttpClient httpClient = HttpClientBuilder.create().disableRedirectHandling().build();
+        RestTemplate restTemplateWithNoRedirect = new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClient));
+        ResponseEntity<Void> response = restTemplateWithNoRedirect.getForEntity(url, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         String expectedUrl = "http://example.com";
         assertThat(response.getHeaders().getFirst(HttpHeaders.LOCATION)).isEqualTo(expectedUrl);
