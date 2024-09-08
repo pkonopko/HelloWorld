@@ -1,6 +1,5 @@
 package com.example.ShortnerURL;
 
-import ch.qos.logback.core.net.AbstractSSLSocketAppender;
 import com.example.ShortnerURL.exceptions.InvalidUrlException;
 import com.example.ShortnerURL.exceptions.ShortLinkNotFoundException;
 import com.example.ShortnerURL.models.dto.ShortLinkDto;
@@ -24,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class ShortnerUrlApplicationTests {
+public class ShortenerUrlApplicationTests {
 	@MockBean
 	private ShortLinkRepository shortLinkRepository;
 	@MockBean
