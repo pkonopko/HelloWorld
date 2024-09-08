@@ -41,6 +41,7 @@ public class ApiController {
         return ResponseEntity.ok("Link deleted");
     }
     @GetMapping("/{shortLinkCode}")
+    @ResponseStatus(HttpStatus.FOUND)
     public RedirectView redirectToOriginalUrl(@PathVariable String shortLinkCode){
         return apiService.redirectToOriginalUrl(shortLinkCode);
     }
