@@ -20,9 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-public class ApiServiceImplIt {
-    @Autowired
-    private ShortLinkRepository shortLinkRepository;
+public class ApiServiceImplIt extends PostgresIntegrationTest {
     @Autowired
     private ApiService apiService;
     private static final String EXISTING_SHORT_LINK_CODE = "abc123";
@@ -35,11 +33,6 @@ public class ApiServiceImplIt {
                 .build();
         shortLinkRepository.save(shortLinkEntity);
     }
-    @AfterEach
-    void cleanUp(){
-        shortLinkRepository.deleteAll();
-    }
-
 
     @Test
     void shouldGetShortLink() {
