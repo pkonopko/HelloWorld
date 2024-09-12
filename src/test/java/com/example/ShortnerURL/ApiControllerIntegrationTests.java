@@ -14,11 +14,15 @@ import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.web.client.RestTemplate;
 
 import org.apache.hc.client5.http.classic.HttpClient;
-import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
@@ -26,13 +30,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class ApiControllerIntegrationTests {
+public class ApiControllerIntegrationTests extends PostgresIntegrationTest {
     @LocalServerPort
     private int port;
     @Autowired
     private TestRestTemplate restTemplate;
-    @Autowired
-    private ShortLinkRepository shortLinkRepository;
 
     @BeforeEach
     void setUp() {
@@ -46,11 +48,6 @@ public class ApiControllerIntegrationTests {
                 .build();
         shortLinkRepository.save(shortLink1);
         shortLinkRepository.save(shortLink2);
-    }
-
-    @AfterEach
-    void cleanUp() {
-        shortLinkRepository.deleteAll();
     }
 
     @Test
