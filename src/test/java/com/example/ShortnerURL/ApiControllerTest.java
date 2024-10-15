@@ -45,56 +45,56 @@ public class ApiControllerTest {
         this.mockMvc.perform(get("/shortLink/{shortLinkCode}", "abc123")).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().json(asJsonString(shortLinkDto1)));
     }
-     @Test
-     void shouldGetShortLinksAvailable() throws Exception {
-         ShortLinkDto shortLinkDto1 = ShortLinkDto.builder()
-                 .longLink("https://news.sky.com/")
-                 .shortLinkCode("abc123")
-                 .build();
-         ShortLinkDto shortLinkDto2 = ShortLinkDto.builder()
-                 .longLink("https://www.skysports.com/")
-                 .shortLinkCode("cab321")
-                 .build();
-         List<ShortLinkDto> expectedResults = Arrays.asList(shortLinkDto1, shortLinkDto2);
+    @Test
+    void shouldGetShortLinksAvailable() throws Exception {
+        ShortLinkDto shortLinkDto1 = ShortLinkDto.builder()
+                .longLink("https://news.sky.com/")
+                .shortLinkCode("abc123")
+                .build();
+        ShortLinkDto shortLinkDto2 = ShortLinkDto.builder()
+                .longLink("https://www.skysports.com/")
+                .shortLinkCode("cab321")
+                .build();
+        List<ShortLinkDto> expectedResults = Arrays.asList(shortLinkDto1, shortLinkDto2);
         when(apiService.getAllShortLinks()).thenReturn(expectedResults);
         this.mockMvc.perform(get("/shortLink", "abc123", "cab321")).andDo(print()).andExpect(status().isOk())
-                 .andExpect(content().json(asJsonString(expectedResults)));
+                .andExpect(content().json(asJsonString(expectedResults)));
 
-     }
-     @Test
-     void shouldDeleteShortLink() throws Exception{
-         doNothing().when(apiService).deleteShortLink("abc123");
-         this.mockMvc.perform(delete("/shortLink/{shortLinkCode}", "abc123")).andDo(print()).andExpect(status().isOk())
-                 .andExpect(content().string("Link deleted"));
+    }
+    @Test
+    void shouldDeleteShortLink() throws Exception{
+        doNothing().when(apiService).deleteShortLink("abc123");
+        this.mockMvc.perform(delete("/shortLink/{shortLinkCode}", "abc123")).andDo(print()).andExpect(status().isOk())
+                .andExpect(content().string("Link deleted"));
 
-     }
-     @Test
-     void shouldCreateShortLink() throws Exception {
-         CreateShortLinkRequestDto createShortLinkRequestDto = CreateShortLinkRequestDto.builder()
-                 .longLink("https://www.skysports.com/")
-                 .build();
-         ShortLinkDto shortLinkDto2 = ShortLinkDto.builder()
-                 .longLink("https://www.skysports.com/")
-                 .shortLinkCode("cab321")
-                 .build();
-         String createShortLinkRequestJson = asJsonString(createShortLinkRequestDto);
+    }
+    @Test
+    void shouldCreateShortLink() throws Exception {
+        CreateShortLinkRequestDto createShortLinkRequestDto = CreateShortLinkRequestDto.builder()
+                .longLink("https://www.skysports.com/")
+                .build();
+        ShortLinkDto shortLinkDto2 = ShortLinkDto.builder()
+                .longLink("https://www.skysports.com/")
+                .shortLinkCode("cab321")
+                .build();
+        String createShortLinkRequestJson = asJsonString(createShortLinkRequestDto);
 
-         when(apiService.createShortLink("https://www.skysports.com/")).thenReturn(shortLinkDto2);
+        when(apiService.createShortLink("https://www.skysports.com/")).thenReturn(shortLinkDto2);
         this.mockMvc.perform(post("/shortLink","https://www.skysports.com")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createShortLinkRequestJson))
                 .andDo(print()).
                 andExpect(status().isCreated())
                 .andExpect(content().json(asJsonString(shortLinkDto2)));
-     }
-     @Test
-     void shouldRedirectToOriginalUrl() throws Exception{
+    }
+    @Test
+    void shouldRedirectToOriginalUrl() throws Exception{
         RedirectView redirectView = new RedirectView("https://www.skysports.com/");
         when(apiService.redirectToOriginalUrl("cab321")).thenReturn(redirectView);
         this.mockMvc.perform(get("/{shortLinkCode}", "cab321")).andDo(print()).andExpect(status().isFound())
-                 .andExpect(redirectedUrl("https://www.skysports.com/"));
+                .andExpect(redirectedUrl("https://www.skysports.com/"));
 
-     }
+    }
     private static String asJsonString(Object obj) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
