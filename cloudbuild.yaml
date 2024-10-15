@@ -1,0 +1,21 @@
+steps:
+  #- name: maven:3.3-jdk-8
+  - name: maven:3.8.4-openjdk-17
+    entrypoint: mvn
+    args: [ 'test' ]
+    #- name: maven:3.3-jdk-8
+  - name: maven:3.8.4-openjdk-17
+    entrypoint: mvn
+    args: [ 'package','-Dmaven.test.skip=true' ]
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/shortenerurl-437517/urlshortnerservice', '.']
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/shortenerurl-437517/urlshortnerservice']
+  # Deploy container image to Cloud Run
+#  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+#    entrypoint: gcloud
+#    args: ['run', 'deploy', 'URLShortnerService', '--image', 'gcr.io/shortenerurl-437517/URLShortnerService', '--region', 'europe-west1']
+images:
+  - "gcr.io/shortenerurl-437517/urlshortnerservice"

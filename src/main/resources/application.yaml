@@ -1,6 +1,9 @@
 server:
   port: 8080
-
+  error:
+    whitelabel:
+      enabled: false
+    path: /404
 
 spring:
   datasource:
