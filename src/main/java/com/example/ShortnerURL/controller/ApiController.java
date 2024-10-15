@@ -5,8 +5,12 @@ import com.example.ShortnerURL.models.dto.CreateShortLinkRequestDto;
 import com.example.ShortnerURL.models.dto.ShortLinkDto;
 import com.example.ShortnerURL.service.ApiService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,5 +48,12 @@ public class ApiController {
     @ResponseStatus(HttpStatus.FOUND)
     public RedirectView redirectToOriginalUrl(@PathVariable String shortLinkCode){
         return apiService.redirectToOriginalUrl(shortLinkCode);
+    }
+    @GetMapping({"/404", "/404.html", "/**"})
+    public ResponseEntity<Resource> notFoundPage() {
+        Resource resource = new ClassPathResource("static/404.html");
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_HTML)
+                .body(resource);
     }
 }
