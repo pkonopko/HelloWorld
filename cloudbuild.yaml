@@ -14,8 +14,8 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/shortenerurl-437517/urlshortnerservice']
   # Deploy container image to Cloud Run
-#  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-#    entrypoint: gcloud
-#    args: ['run', 'deploy', 'URLShortnerService', '--image', 'gcr.io/shortenerurl-437517/URLShortnerService', '--region', 'europe-west1']
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: ['run', 'deploy', 'urlshortnerservice', '--image', 'gcr.io/shortenerurl-437517/urlshortnerservice', '--region', 'europe-west1']
 images:
   - "gcr.io/shortenerurl-437517/urlshortnerservice"
