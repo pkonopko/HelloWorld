@@ -16,7 +16,8 @@ steps:
   # Deploy container image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
-    args: ['run', 'deploy', 'urlshortnerservice', '--image', 'gcr.io/shortenerurl-437517/urlshortnerservice', '--region', 'europe-west1']
+    args: ['run', 'deploy', 'urlshortnerservice', '--image', 'gcr.io/shortenerurl-437517/urlshortnerservice', '--region', 'europe-west1', '--platform'
+         'managed', '--set-env-vars', 'PASSWORD=your_neon_db_password', '--allow-unauthenticated']
 options:
   logging: CLOUD_LOGGING_ONLY
 images:
