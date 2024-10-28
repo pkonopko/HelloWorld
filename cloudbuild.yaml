@@ -17,5 +17,7 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: ['run', 'deploy', 'urlshortnerservice', '--image', 'gcr.io/shortenerurl-437517/urlshortnerservice', '--region', 'europe-west1']
+options:
+  logging: CLOUD_LOGGING_ONLY
 images:
   - "gcr.io/shortenerurl-437517/urlshortnerservice"
