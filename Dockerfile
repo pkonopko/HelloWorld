@@ -4,6 +4,5 @@ WORKDIR /app
 COPY target/*.jar app.jar
 RUN chown -R app:app /app
 USER app
-ENV PORT=8080
-EXPOSE ${PORT}
-ENTRYPOINT ["java", "-Dserver.port=${PORT}", "-Dspring.profiles.active=neon", "-jar", "app.jar"]
+EXPOSE 8080
+ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT:8080} -Dspring.profiles.active=neon -jar app.jar"]
