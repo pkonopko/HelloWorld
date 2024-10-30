@@ -9,7 +9,7 @@ spring:
   datasource:
     url: jdbc:postgresql://ep-flat-block-a2i8n4ng.eu-central-1.aws.neon.tech/ShortnerURL?sslmode=require
     username: ShortnerURL_owner
-    password: 5tqEysuTWVL9
+    password: ${PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
