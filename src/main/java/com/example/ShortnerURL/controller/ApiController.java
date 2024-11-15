@@ -2,9 +2,12 @@ package com.example.ShortnerURL.controller;
 
 import com.example.ShortnerURL.exceptions.ApplicationExceptions;
 import com.example.ShortnerURL.models.dto.CreateShortLinkRequestDto;
+import com.example.ShortnerURL.models.dto.DeleteShortLinkResultDTO;
 import com.example.ShortnerURL.models.dto.ShortLinkDto;
 import com.example.ShortnerURL.service.ApiService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.cfg.Environment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -16,7 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,6 +33,7 @@ public class ApiController {
     @ResponseStatus(HttpStatus.CREATED)
     public ShortLinkDto createShortLink(@RequestBody CreateShortLinkRequestDto createShortLinkRequestDto) throws ApplicationExceptions {
         return apiService.createShortLink(createShortLinkRequestDto.getLongLink());
+        //return apiService.createShortLink(createShortLinkRequestDto.getLongLink());
     }
 
     @GetMapping("/shortLink")
@@ -40,9 +46,9 @@ public class ApiController {
         return ResponseEntity.ok(apiService.getShortLink(shortLinkCode));
     }
     @DeleteMapping("/shortLink/{shortLinkCode}")
-    public ResponseEntity<String> deleteShortLink(@PathVariable String shortLinkCode){
-        apiService.deleteShortLink(shortLinkCode);
-        return ResponseEntity.ok("Link deleted");
+    public ResponseEntity<DeleteShortLinkResultDTO> deleteShortLink(@PathVariable String shortLinkCode){
+
+        return ResponseEntity.ok(apiService.deleteShortLink(shortLinkCode));
     }
     @GetMapping("/{shortLinkCode}")
     @ResponseStatus(HttpStatus.FOUND)

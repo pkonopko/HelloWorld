@@ -20,7 +20,9 @@ import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -82,7 +84,10 @@ public class ApiControllerIntegrationTests extends PostgresIntegrationTest {
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, null, String.class, "abc123");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo("Link deleted");
+        Map<String, String> expectedResponse = new HashMap<>();
+        expectedResponse.put("status", "Link deleted");
+
+        assertThat(response.getBody()).isEqualTo(expectedResponse);
 
         assertThat(shortLinkRepository.findByShortLinkCode("abc123")).isEmpty();
     }
