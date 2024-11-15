@@ -2,6 +2,7 @@ package com.example.ShortnerURL;
 
 import com.example.ShortnerURL.exceptions.InvalidUrlException;
 import com.example.ShortnerURL.exceptions.ShortLinkNotFoundException;
+import com.example.ShortnerURL.models.dto.DeleteShortLinkResultDTO;
 import com.example.ShortnerURL.models.dto.ShortLinkDto;
 import com.example.ShortnerURL.models.entity.ShortLinkEntity;
 import com.example.ShortnerURL.repositories.ShortLinkRepository;
@@ -82,9 +83,14 @@ public class ShortenerUrlApplicationTests {
 
 	@Test
 	void shouldDeleteShortLink() {
-		when(shortLinkRepository.existsByShortLinkCode(shortLinkEntity.getShortLinkCode())).thenReturn(true);
-		apiService.deleteShortLink(shortLinkEntity.getShortLinkCode());
-		verify(shortLinkRepository, times(1)).deleteByShortLinkCode(shortLinkEntity.getShortLinkCode());
+		String shortLinkCode = shortLinkEntity.getShortLinkCode();
+		when(shortLinkRepository.deleteByShortLinkCode(shortLinkCode)).thenReturn(1);
+
+		DeleteShortLinkResultDTO result = apiService.deleteShortLink(shortLinkCode);
+		assertEquals("Link deleted", result.getResult());
+		assertEquals(shortLinkCode, result.getShortLinkCode());
+
+		verify(shortLinkRepository, times(1)).deleteByShortLinkCode(shortLinkCode);
 	}
 
 	@Test

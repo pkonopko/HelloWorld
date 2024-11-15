@@ -2,6 +2,7 @@ package com.example.ShortnerURL.service;
 
 import com.example.ShortnerURL.exceptions.ApplicationExceptions;
 import com.example.ShortnerURL.exceptions.ShortLinkNotFoundException;
+import com.example.ShortnerURL.models.dto.DeleteShortLinkResultDTO;
 import com.example.ShortnerURL.models.dto.ShortLinkDto;
 import com.example.ShortnerURL.models.entity.ShortLinkEntity;
 import com.example.ShortnerURL.exceptions.InvalidUrlException;
@@ -41,12 +42,20 @@ public class ApiService {
                 .longLink(shortLinkEntity.getLongLink())
                 .build();
     }
+
     @Transactional
-    public void deleteShortLink(String shortLinkCode) throws ShortLinkNotFoundException {
-        if (!shortLinkRepository.existsByShortLinkCode(shortLinkCode)) {
+    public DeleteShortLinkResultDTO deleteShortLink(String shortLinkCode) throws ShortLinkNotFoundException {
+        //write a code that calls the database once
+        int deletedCount = shortLinkRepository.deleteByShortLinkCode(shortLinkCode);
+        if (deletedCount == 0) {
             throw new ShortLinkNotFoundException(shortLinkCode);
         }
-        shortLinkRepository.deleteByShortLinkCode(shortLinkCode);
+        return DeleteShortLinkResultDTO.builder()
+                .result("Link deleted")
+                .shortLinkCode(shortLinkCode)
+                .build();
+
+
     }
 
 
