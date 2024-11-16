@@ -1,4 +1,4 @@
-`steps:
+steps:
   - name: 'maven:3.8.4-openjdk-17'
     entrypoint: 'mvn'
     args: ['test']
@@ -40,4 +40,3 @@ options:
 
 images:
   - "gcr.io/shortenerurl-437517/urlshortnerservice-dev"
-`
