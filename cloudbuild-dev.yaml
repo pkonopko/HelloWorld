@@ -27,7 +27,7 @@ steps:
       - 'DB_PASSWORD=DB_PASSWORD:latest'
       - '--allow-unauthenticated'
       - '--timeout'
-      - '5m'
+      - '10m'
       - '--memory'
       - '512Mi'
 
