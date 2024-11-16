@@ -1,0 +1,27 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:postgresql://ep-cool-union-a2wyuyor-pooler.eu-central-1.aws.neon.tech/ShortnerURL?sslmode=require
+    username: ShortnerURL_owner
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate        # Validate schema, do not update in prod
+    show-sql: false             # Do not log SQL in production
+
+server:
+  port: 8080                    # Port for production server
+
+logging:
+  level:
+    root: WARN                  # Only log warnings and errors
+    org.springframework: INFO   # More restrictive logging in production
+
+# Custom application properties
+app:
+  name: ShortenerUrl (Production)
+  featureX:
+    enabled: false              # Disable experimental feature in prod
