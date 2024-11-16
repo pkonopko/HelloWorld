@@ -3,8 +3,6 @@ package com.example.ShortnerURL;
 import com.example.ShortnerURL.models.dto.CreateShortLinkRequestDto;
 import com.example.ShortnerURL.models.dto.ShortLinkDto;
 import com.example.ShortnerURL.models.entity.ShortLinkEntity;
-import com.example.ShortnerURL.repositories.ShortLinkRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
