@@ -1,0 +1,43 @@
+`steps:
+  - name: 'maven:3.8.4-openjdk-17'
+    entrypoint: 'mvn'
+    args: ['test']
+
+  - name: 'maven:3.8.4-openjdk-17'
+    entrypoint: 'mvn'
+    args: ['package', '-Dmaven.test.skip=true']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/shortenerurl-437517/urlshortnerservice-dev', '.']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/shortenerurl-437517/urlshortnerservice-dev']
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'urlshortnerservice-dev'
+      - '--image'
+      - 'gcr.io/shortenerurl-437517/urlshortnerservice-dev'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'
+      - '--set-env-vars'
+      - 'SPRING_PROFILES_ACTIVE=dev'
+      - '--set-secrets'
+      - 'DB_PASSWORD=DB_PASSWORD:latest'
+      - '--allow-unauthenticated'
+      - '--timeout'
+      - '5m'
+      - '--memory'
+      - '512Mi'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+images:
+  - "gcr.io/shortenerurl-437517/urlshortnerservice-dev"
+`
