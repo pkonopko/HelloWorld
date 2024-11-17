@@ -3,8 +3,6 @@ package com.example.ShortnerURL;
 import com.example.ShortnerURL.models.dto.CreateShortLinkRequestDto;
 import com.example.ShortnerURL.models.dto.ShortLinkDto;
 import com.example.ShortnerURL.models.entity.ShortLinkEntity;
-import com.example.ShortnerURL.repositories.ShortLinkRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,9 @@ import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -82,7 +82,10 @@ public class ApiControllerIntegrationTests extends PostgresIntegrationTest {
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, null, String.class, "abc123");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo("Link deleted");
+        Map<String, String> expectedResponse = new HashMap<>();
+        expectedResponse.put("status", "Link deleted");
+
+        assertThat(response.getBody()).isEqualTo(expectedResponse);
 
         assertThat(shortLinkRepository.findByShortLinkCode("abc123")).isEmpty();
     }

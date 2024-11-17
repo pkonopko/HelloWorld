@@ -2,6 +2,7 @@ package com.example.ShortnerURL;
 
 import com.example.ShortnerURL.controller.ApiController;
 import com.example.ShortnerURL.models.dto.CreateShortLinkRequestDto;
+import com.example.ShortnerURL.models.dto.DeleteShortLinkResultDTO;
 import com.example.ShortnerURL.models.dto.ShortLinkDto;
 import com.example.ShortnerURL.service.ApiService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -63,9 +64,16 @@ public class ApiControllerTest {
     }
     @Test
     void shouldDeleteShortLink() throws Exception{
-        doNothing().when(apiService).deleteShortLink("abc123");
-        this.mockMvc.perform(delete("/shortLink/{shortLinkCode}", "abc123")).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string("Link deleted"));
+
+        DeleteShortLinkResultDTO deleteShortLinkResultDTO = DeleteShortLinkResultDTO.builder()
+                .shortLinkCode("abc123")
+                .result("Link deleted")
+                .build();
+        when(apiService.deleteShortLink("abc123")).thenReturn(deleteShortLinkResultDTO);
+        this.mockMvc.perform(delete("/shortLink/{shortLinkCode}", "abc123"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"shortLinkCode\": \"abc123\", \"result\": \"Link deleted\"}"));
 
     }
     @Test
