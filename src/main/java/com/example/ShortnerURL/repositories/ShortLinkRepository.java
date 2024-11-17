@@ -16,6 +16,5 @@ public interface ShortLinkRepository extends JpaRepository<ShortLinkEntity, Long
      List<ShortLinkEntity> findByShortLinkCode(String shortLinkCode);
      //void deleteByShortLinkCode (String shortLinkCode);
      @Modifying
-     @Transactional
      @Query("DELETE FROM links s WHERE s.shortLinkCode = :shortLinkCode")
      int deleteByShortLinkCode(String shortLinkCode);}
