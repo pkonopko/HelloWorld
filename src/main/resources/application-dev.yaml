@@ -20,6 +20,24 @@ server:
 logging:
   level:
     root: DEBUG
+    org.springframework.boot: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.boot.web.embedded.tomcat: DEBUG
+    org.springframework.boot.actuate: DEBUG
+    org.springframework.boot.autoconfigure: DEBUG
+    org.springframework.test.context.cache: DEBUG
+    org.springframework.context.support: TRACE
+    # Connection pool logging
+    com.zaxxer.hikari: DEBUG
+    # Transaction logging
+    org.springframework.transaction: TRACE
+    org.hibernate.transaction: DEBUG
+    # SQL logging
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql: TRACE
-    com.zaxxer.hikari: DEBUG
+#logging:
+ # level:
+  #  root: DEBUG
+   # org.hibernate.SQL: DEBUG
+    #org.hibernate.type.descriptor.sql: TRACE
+    #com.zaxxer.hikari: DEBUG

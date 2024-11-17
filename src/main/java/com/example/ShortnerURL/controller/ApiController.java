@@ -47,7 +47,6 @@ public class ApiController {
     }
     @DeleteMapping("/shortLink/{shortLinkCode}")
     public ResponseEntity<DeleteShortLinkResultDTO> deleteShortLink(@PathVariable String shortLinkCode){
-
         return ResponseEntity.ok(apiService.deleteShortLink(shortLinkCode));
     }
     @GetMapping("/{shortLinkCode}")
