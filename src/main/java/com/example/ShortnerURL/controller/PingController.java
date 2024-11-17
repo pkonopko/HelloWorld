@@ -1,4 +1,5 @@
 package com.example.ShortnerURL.controller;
+
 import com.example.ShortnerURL.exceptions.ApplicationExceptions;
 import com.example.ShortnerURL.webDto.PingResponseDTO;
 import org.slf4j.Logger;

@@ -10,7 +10,7 @@ import java.util.List;
 @Configuration
 public class ModelMapperConfig {
     @Bean
-    public ModelMapper modelMapper(List<Converter> converters){
+    public ModelMapper modelMapper(List<Converter> converters) {
         ModelMapper modelMapper = new ModelMapper();
         converters.forEach(modelMapper::addConverter);
         return modelMapper;

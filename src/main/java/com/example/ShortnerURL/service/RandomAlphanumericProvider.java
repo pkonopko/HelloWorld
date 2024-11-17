@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 
 public class RandomAlphanumericProvider {
-    public String getNewShortLinkCode(){
+    public String getNewShortLinkCode() {
         String shortLinkCode = RandomStringUtils.randomAlphanumeric(6);
         return shortLinkCode;
     }

@@ -16,7 +16,7 @@ public class ShortLinkEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String longLink;
-    @Column(unique=true)
-    @Index(name="shortLinkCodeIndex")
+    @Column(unique = true)
+    @Index(name = "shortLinkCodeIndex")
     String shortLinkCode;
 }

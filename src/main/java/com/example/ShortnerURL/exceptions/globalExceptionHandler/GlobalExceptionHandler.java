@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(ApplicationExceptions.class)
-    public final ResponseEntity<ErrorResponseDto> handleApplicationException(ApplicationExceptions ex){
+    public final ResponseEntity<ErrorResponseDto> handleApplicationException(ApplicationExceptions ex) {
         ErrorResponseDto errorResponse = ErrorResponseDto.builder()
                 .status("error")
                 .message(ex.getMessage())
@@ -21,8 +21,9 @@ public class GlobalExceptionHandler {
         logger.error("Application exception: ", ex);
         return ResponseEntity.status(ex.getHttpStatus()).body(errorResponse);
     }
+
     @ExceptionHandler(Throwable.class)
-    public final ResponseEntity<ErrorResponseDto>HandleException(Throwable ex){
+    public final ResponseEntity<ErrorResponseDto> HandleException(Throwable ex) {
         ErrorResponseDto errorResponse = ErrorResponseDto.builder()
                 .status("Error")
                 .message("Unknown error")

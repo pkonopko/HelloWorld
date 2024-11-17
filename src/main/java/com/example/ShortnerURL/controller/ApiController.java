@@ -39,16 +39,24 @@ public class ApiController {
     public ResponseEntity<ShortLinkDto> getShortLink(@PathVariable String shortLinkCode) {
         return ResponseEntity.ok(apiService.getShortLink(shortLinkCode));
     }
+
     @DeleteMapping("/shortLink/{shortLinkCode}")
+<<<<<<< Updated upstream
     public ResponseEntity<String> deleteShortLink(@PathVariable String shortLinkCode){
         apiService.deleteShortLink(shortLinkCode);
         return ResponseEntity.ok("Link deleted");
+=======
+    public ResponseEntity<DeleteShortLinkResultDTO> deleteShortLink(@PathVariable String shortLinkCode) {
+        return ResponseEntity.ok(apiService.deleteShortLink(shortLinkCode));
+>>>>>>> Stashed changes
     }
+
     @GetMapping("/{shortLinkCode}")
     @ResponseStatus(HttpStatus.FOUND)
-    public RedirectView redirectToOriginalUrl(@PathVariable String shortLinkCode){
+    public RedirectView redirectToOriginalUrl(@PathVariable String shortLinkCode) {
         return apiService.redirectToOriginalUrl(shortLinkCode);
     }
+
     @GetMapping({"/404", "/404.html", "/**"})
     public ResponseEntity<Resource> notFoundPage() {
         Resource resource = new ClassPathResource("static/404.html");

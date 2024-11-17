@@ -58,6 +58,7 @@ public class ApiService {
                 .map(ApiService::convertToDto)
                 .orElseThrow(() -> new ShortLinkNotFoundException(shortLinkCode));
     }
+
     @Transactional
     public ShortLinkDto createShortLink(String longLink) throws ApplicationExceptions {
         String shortLinkCode = "";
@@ -86,7 +87,7 @@ public class ApiService {
         return true;
     }
 
-    public RedirectView redirectToOriginalUrl(String shortLinkCode) throws ShortLinkNotFoundException{
+    public RedirectView redirectToOriginalUrl(String shortLinkCode) throws ShortLinkNotFoundException {
         List<ShortLinkEntity> shortLinkEntities = shortLinkRepository.findByShortLinkCode(shortLinkCode);
         String longLink = shortLinkEntities
                 .stream()
