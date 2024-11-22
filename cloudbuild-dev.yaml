@@ -1,7 +1,11 @@
 steps:
   - name: 'maven:3.8.4-openjdk-17'
     entrypoint: 'mvn'
-    args: [ 'package', '-DskipTests' ]
+    args: [ 'test' ]
+
+  - name: 'maven:3.8.4-openjdk-17'
+    entrypoint: 'mvn'
+    args: ['package', '-Dmaven.test.skip=true']
 
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/shortenerurl-437517/urlshortnerservice-dev', '.']
