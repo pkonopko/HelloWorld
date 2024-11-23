@@ -1,8 +1,10 @@
 package com.example.ShortnerURL;
 
 import com.example.ShortnerURL.models.dto.CreateShortLinkRequestDto;
+import com.example.ShortnerURL.models.dto.DeleteShortLinkResultDTO;
 import com.example.ShortnerURL.models.dto.ShortLinkDto;
 import com.example.ShortnerURL.models.entity.ShortLinkEntity;
+import org.h2.command.dml.Delete;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -77,15 +80,16 @@ public class ApiControllerIntegrationTests extends PostgresIntegrationTest {
 
     @Test
     void shouldDeleteShortLink() {
+        
         String url = "http://localhost:" + port + "/shortLink/{shortLinkCode}";
 
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, null, String.class, "abc123");
+        ResponseEntity<DeleteShortLinkResultDTO> response = restTemplate.exchange(url, HttpMethod.DELETE, null, DeleteShortLinkResultDTO.class, "abc123");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Map<String, String> expectedResponse = new HashMap<>();
-        expectedResponse.put("status", "Link deleted");
 
-        assertThat(response.getBody()).isEqualTo(expectedResponse);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().getResult()).isEqualTo("Link deleted");
+        assertThat(response.getBody().getShortLinkCode()).isEqualTo("abc123");
 
         assertThat(shortLinkRepository.findByShortLinkCode("abc123")).isEmpty();
     }
